@@ -24,9 +24,13 @@ export default function Footer() {
             </li>
 
             <li>
-              <a href="#" className="hover:underline">
+              <button
+                type="button"
+                className="hover:underline cursor-pointer"
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              >
                 Torna in alto
-              </a>
+              </button>
             </li>
           </ul>
         </div>
