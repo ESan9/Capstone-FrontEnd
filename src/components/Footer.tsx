@@ -32,11 +32,7 @@ export default function Footer() {
         </div>
         <hr className="my-6 sm:mx-auto lg:my-8 border-gray-200" />
         <span className="block text-sm text-center">
-          © {new Date().getFullYear()}{" "}
-          <a href="#" className="hover:underline">
-            Segnali
-          </a>
-          . Tutti i diritti riservati.
+          © {new Date().getFullYear()} Segnali. Tutti i diritti riservati.
         </span>
       </div>
     </footer>
