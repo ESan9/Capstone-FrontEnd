@@ -28,31 +28,31 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 // DA SOSTITUIRE CON CHIAMATE.
 const products = [
   {
-    name: "Analytics",
+    name: "Borse",
     description: "Get a better understanding of your traffic",
     href: "#",
     icon: ChartPieIcon,
   },
   {
-    name: "Engagement",
+    name: "Zaini",
     description: "Speak directly to your customers",
     href: "#",
     icon: CursorArrowRaysIcon,
   },
   {
-    name: "Security",
+    name: "Cartelle",
     description: "Your customers’ data will be safe and secure",
     href: "#",
     icon: FingerPrintIcon,
   },
   {
-    name: "Integrations",
+    name: "Portafogli",
     description: "Connect with third-party tools",
     href: "#",
     icon: SquaresPlusIcon,
   },
   {
-    name: "Automations",
+    name: "Accessori",
     description: "Build strategic funnels that will convert",
     href: "#",
     icon: ArrowPathIcon,
@@ -80,7 +80,6 @@ export default function Navbar() {
             onClick={() => setMobileMenuOpen(true)}
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
           >
-            <span className="sr-only">Open main menu</span>
             <Bars3Icon aria-hidden="true" className="h-6 w-6" />
           </button>
         </div>
@@ -151,7 +150,7 @@ export default function Navbar() {
         <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
             <a href="#" className="-m-1.5 p-1.5">
-              <span className="sr-only">Your Company</span>
+              <span className="sr-only">Segnali</span>
               <img
                 alt=""
                 src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
@@ -163,7 +162,7 @@ export default function Navbar() {
               onClick={() => setMobileMenuOpen(false)}
               className="-m-2.5 rounded-md p-2.5 text-gray-700"
             >
-              <span className="sr-only">Close menu</span>
+              <span className="sr-only">Chiudi menu</span>
               <XMarkIcon aria-hidden="true" className="h-6 w-6" />
             </button>
           </div>
