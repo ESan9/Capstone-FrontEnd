@@ -8,6 +8,10 @@ import type {
   LoginResponseDTO,
   RegisterDTO,
   User,
+  NewCategoryDTO,
+  NewProductDTO,
+  ProductImage,
+  BackendErrorResponse,
 } from "../types/api";
 
 // Creo un "client" axios pre-configurato
@@ -30,6 +34,31 @@ apiClient.interceptors.request.use(
   }
 );
 
+apiClient.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    // Qui intercetto l'errore dal backend
+
+    // 1. Gestione Token Scaduto o Non Valido (401)
+    if (error.response && error.response.status === 401) {
+      console.warn("Sessione scaduta o non autorizzata. Logout...");
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("user"); // Rimuovi anche i dati user se li salvi
+      window.location.href = "/login";
+    }
+
+    // 2. Gestione Accesso Negato (403)
+    if (error.response && error.response.status === 403) {
+      alert("Non hai i permessi necessari per eseguire questa azione.");
+    }
+
+    // 3. Passiamo l'errore al componente per gestirlo specificamente
+    // (es. "Nome prodotto duplicato" nel form)
+    return Promise.reject(error);
+  }
+);
 // Funzioni Pubbliche
 
 export const fetchCategories = async (): Promise<Page<Category>> => {
@@ -96,4 +125,121 @@ export const getMe = async (): Promise<User> => {
     console.error("Errore nel fetch del profilo utente:", error);
     throw error;
   }
+};
+
+// FUNZIONI ADMIN (Scrittura)
+
+// 1. Crea Categoria
+export const createCategory = async (
+  data: NewCategoryDTO
+): Promise<Category> => {
+  const response = await apiClient.post("/category", data);
+  return response.data;
+};
+
+// 2. Upload Immagine Categoria
+export const uploadCategoryCover = async (
+  categoryId: string,
+  file: File
+): Promise<Category> => {
+  const formData = new FormData();
+  formData.append("cover", file); // "cover" deve corrispondere al @RequestParam del backend
+  const response = await apiClient.post(
+    `/category/${categoryId}/upload-cover`,
+    formData,
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+    }
+  );
+  return response.data;
+};
+
+// 3. Crea Prodotto
+export const createProduct = async (data: NewProductDTO): Promise<Product> => {
+  const response = await apiClient.post("/product", data);
+  return response.data;
+};
+
+// 4. Upload Immagine Prodotto
+export const uploadProductImage = async (
+  productId: string,
+  file: File
+): Promise<ProductImage> => {
+  const formData = new FormData();
+  formData.append("image", file);
+  const response = await apiClient.post(
+    `/product/${productId}/upload-image`,
+    formData,
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+    }
+  );
+  return response.data;
+};
+
+// 5. Modifica Categoria
+export const updateCategory = async (
+  id: string,
+  data: NewCategoryDTO
+): Promise<Category> => {
+  try {
+    const response = await apiClient.put(`/category/${id}`, data);
+    return response.data;
+  } catch (error) {
+    console.error("Errore aggiornamento categoria:", error);
+    throw error;
+  }
+};
+
+// 6. Modifica Prodotto
+export const updateProduct = async (
+  id: string,
+  data: NewProductDTO
+): Promise<Product> => {
+  try {
+    const response = await apiClient.put(`/product/${id}`, data);
+    return response.data;
+  } catch (error) {
+    console.error("Errore aggiornamento prodotto:", error);
+    throw error;
+  }
+};
+
+// 7. Elimina Prodotto (Utile per gestire il catalogo)
+export const deleteProduct = async (id: string): Promise<void> => {
+  try {
+    await apiClient.delete(`/product/${id}`);
+  } catch (error) {
+    console.error("Errore eliminazione prodotto:", error);
+    throw error;
+  }
+};
+
+// 8. Elimina Categoria
+export const deleteCategory = async (id: string): Promise<void> => {
+  try {
+    await apiClient.delete(`/category/${id}`);
+  } catch (error) {
+    console.error("Errore eliminazione categoria:", error);
+    throw error;
+  }
+};
+
+export const getErrorMessage = (error: unknown): string => {
+  // Verifica se è un errore di Axios
+  if (axios.isAxiosError(error) && error.response) {
+    const data = error.response.data as BackendErrorResponse;
+
+    // 1. Caso del tuo validation custom (ErrorsWithListDTO)
+    if (data.errorsList && Array.isArray(data.errorsList)) {
+      return `${data.message}\n- ${data.errorsList.join("\n- ")}`;
+    }
+
+    // 2. Fallback per messaggi standard di Spring o errori generici
+    return (
+      data.message || data.error || `Errore server: ${error.response.status}`
+    );
+  }
+
+  return "Si è verificato un errore imprevisto o di rete.";
 };

@@ -87,3 +87,29 @@ export interface RegisterDTO {
 export interface LoginResponseDTO {
   accessToken: string;
 }
+
+export interface NewCategoryDTO {
+  name: string;
+  description: string;
+  coverImageUrl: string;
+}
+
+// Corrisponde a ProductDTO nel backend
+export interface NewProductDTO {
+  name: string;
+  description: string;
+  price: number;
+  availability: "AVAILABLE" | "UNAVAILABLE";
+  highlighted: boolean;
+  materials: string;
+  dimension: string;
+  categoryId: string;
+}
+
+export interface BackendErrorResponse {
+  message: string;
+  timestamp?: string;
+  errorsList?: string[];
+  error?: string;
+  status?: number;
+}

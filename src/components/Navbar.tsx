@@ -1,11 +1,8 @@
 "use client";
-// Assicurati di aver creato 'src/assets' e di averci messo 'SegnaliLogo.png'
 import logo from "../assets/SegnaliLogo.png";
 
-import { useState, useEffect } from "react";
-// Importiamo Link per la navigazione
+import { useState, useEffect, Fragment } from "react";
 import { Link, useNavigate } from "react-router-dom";
-// Importiamo il nostro "cervello" Auth
 import { useAuth } from "../hooks/useAuth";
 
 import {
@@ -18,27 +15,35 @@ import {
   PopoverButton,
   PopoverGroup,
   PopoverPanel,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+  Transition,
 } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import {
+  Bars3Icon,
+  XMarkIcon,
+  UserCircleIcon,
+  ChevronDownIcon,
+} from "@heroicons/react/24/outline";
 
-// Importiamo i tipi e le funzioni API
 import type { Category } from "../types/api";
 import { fetchCategories } from "../services/api";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Usiamo il contesto Auth
   const { user, isLoading, logout } = useAuth();
   const navigate = useNavigate();
 
-  // Stato per le categorie
   const [categories, setCategories] = useState<Category[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Carichiamo le categorie al mount
+  // Utility check per admin
+  const isAdmin = user?.roles.some((r) => r.role === "ADMIN");
+
   useEffect(() => {
     const loadCategories = async () => {
       try {
@@ -56,10 +61,9 @@ export default function Navbar() {
     loadCategories();
   }, []);
 
-  // Funzione per gestire il logout
   const handleLogout = () => {
     logout();
-    navigate("/"); // Ritorna alla homepage dopo il logout
+    navigate("/");
   };
 
   return (
@@ -68,13 +72,15 @@ export default function Navbar() {
         aria-label="Global"
         className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
       >
+        {/* LOGO */}
         <div className="flex lg:flex-1">
-          {/* Usiamo <Link> per il logo */}
           <Link to="/" className="-m-1.5 p-1.5 flex items-center gap-x-2">
             <img alt="Logo Negozio" src={logo} className="h-8 w-auto" />
             <span className="font-semibold text-gray-900">Segnali</span>
           </Link>
         </div>
+
+        {/* MOBILE MENU BUTTON */}
         <div className="flex lg:hidden">
           <button
             type="button"
@@ -85,9 +91,11 @@ export default function Navbar() {
             <Bars3Icon aria-hidden="true" className="h-6 w-6" />
           </button>
         </div>
+
+        {/* DESKTOP MENU CENTRALE */}
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
           <Popover className="relative">
-            <PopoverButton className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 hover:underline focus-visible:outline-none">
+            <PopoverButton className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 hover:underline focus-visible:outline-none cursor-pointer">
               Categorie
               <ChevronDownIcon
                 aria-hidden="true"
@@ -100,15 +108,9 @@ export default function Navbar() {
               className="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[enter]:ease-out data-[leave]:duration-150 data-[leave]:ease-in"
             >
               <div className="p-4">
-                {/* Gestione stati di caricamento per le categorie */}
                 {loadingCategories && (
                   <div className="p-4 text-center text-sm text-gray-500">
                     Caricamento...
-                  </div>
-                )}
-                {error && (
-                  <div className="p-4 text-center text-sm text-red-600">
-                    {error}
                   </div>
                 )}
                 {!loadingCategories &&
@@ -141,7 +143,6 @@ export default function Navbar() {
             </PopoverPanel>
           </Popover>
 
-          {/* Usiamo <Link> per i link di navigazione */}
           <Link
             to="/about"
             className="text-sm font-semibold leading-6 text-gray-900 hover:underline"
@@ -156,26 +157,63 @@ export default function Navbar() {
           </Link>
         </PopoverGroup>
 
-        {/* LOGICA DI AUTENTICAZIONE */}
+        {/* DESKTOP UTENTE / LOGIN */}
         <div className="hidden lg:flex lg:flex-1 lg:justify-end gap-x-4 items-center">
           {isLoading ? (
-            // Placeholder mentre si controlla l'auth
             <div className="h-6 w-24 animate-pulse bg-gray-200 rounded-md" />
           ) : user ? (
-            // Se l'utente è loggato
-            <>
-              <span className="text-sm font-semibold text-gray-700">
-                Ciao, {user.name}
-              </span>
-              <button
-                onClick={handleLogout}
-                className="text-sm font-semibold leading-6 text-gray-900 hover:underline"
+            // --- DROPDOWN UTENTE DESKTOP ---
+            <Menu as="div" className="relative ml-3">
+              <div>
+                <MenuButton className="flex items-center gap-x-2 rounded-full bg-white text-sm focus:outline-none p-1 pr-2 hover:bg-gray-50 border border-transparent hover:border-gray-200 transition-colors">
+                  <span className="sr-only">Apri menu utente</span>
+                  <UserCircleIcon
+                    className="h-8 w-8 text-gray-900"
+                    aria-hidden="true"
+                  />
+                  <span className="font-semibold text-gray-900">
+                    Ciao, {user.name}
+                  </span>
+                  <ChevronDownIcon
+                    className="h-4 w-4 text-gray-500"
+                    aria-hidden="true"
+                  />
+                </MenuButton>
+              </div>
+              <Transition
+                as={Fragment}
+                enter="transition ease-out duration-200"
+                enterFrom="transform opacity-0 scale-95"
+                enterTo="transform opacity-100 scale-100"
+                leave="transition ease-in duration-75"
+                leaveFrom="transform opacity-100 scale-100"
+                leaveTo="transform opacity-0 scale-95"
               >
-                Logout <span aria-hidden="true">&rarr;</span>
-              </button>
-            </>
+                <MenuItems className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  {/* Link Admin - Solo se admin */}
+                  {isAdmin && (
+                    <MenuItem>
+                      <Link
+                        to="/admin"
+                        className="block px-4 py-2 text-sm font-semibold text-gray-900 border-b border-gray-100 data-[focus]:bg-gray-100"
+                      >
+                        Dashboard Admin
+                      </Link>
+                    </MenuItem>
+                  )}
+                  <MenuItem>
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 text-sm text-red-600 data-[focus]:bg-gray-100"
+                    >
+                      Logout
+                    </button>
+                  </MenuItem>
+                </MenuItems>
+              </Transition>
+            </Menu>
           ) : (
-            // Se l'utente NON è loggato
+            // --- LOGIN / REGISTER DESKTOP ---
             <>
               <Link
                 to="/login"
@@ -185,7 +223,7 @@ export default function Navbar() {
               </Link>
               <Link
                 to="/register"
-                className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-grey-500"
+                className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 transition-colors"
               >
                 Registrati
               </Link>
@@ -194,7 +232,7 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* --- DIALOG MOBILE --- */}
+      {/* MOBILE MENU DIALOG */}
       <Dialog
         open={mobileMenuOpen}
         onClose={setMobileMenuOpen}
@@ -228,22 +266,17 @@ export default function Navbar() {
                     />
                   </DisclosureButton>
                   <DisclosurePanel className="mt-2 space-y-2">
-                    {loadingCategories ? (
-                      <div className="p-4 text-center text-sm text-gray-500">
-                        Caricamento...
-                      </div>
-                    ) : (
+                    {!loadingCategories &&
                       categories.map((item) => (
                         <DisclosureButton
                           key={item.idCategory}
-                          as={Link} // Usa Link qui
+                          as={Link}
                           to={`/category/${item.slug}`}
                           className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                         >
                           {item.name}
                         </DisclosureButton>
-                      ))
-                    )}
+                      ))}
                   </DisclosurePanel>
                 </Disclosure>
                 <Link
@@ -258,15 +291,24 @@ export default function Navbar() {
                 >
                   Contatti
                 </Link>
+
+                {/* LINK ADMIN MOBILE */}
+                {user && isAdmin && (
+                  <Link
+                    to="/admin"
+                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-bold leading-7 text-gray-900 bg-gray-100 mt-4 border-l-4 border-black"
+                  >
+                    Dashboard Admin
+                  </Link>
+                )}
               </div>
-              {/* Auth mobile */}
               <div className="py-6">
                 {isLoading ? null : user ? (
                   <button
                     onClick={handleLogout}
-                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-red-600 hover:bg-gray-50 w-full text-left"
                   >
-                    Logout
+                    Logout ({user.name})
                   </button>
                 ) : (
                   <>

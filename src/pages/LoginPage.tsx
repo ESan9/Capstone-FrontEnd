@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate, Link } from "react-router-dom";
+import * as api from "../services/api";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const auth = useAuth();
   const navigate = useNavigate();
@@ -13,6 +15,7 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setSuccess(null);
 
     if (!email || !password) {
       setError("Email e password sono obbligatori.");
@@ -22,8 +25,20 @@ export default function LoginPage() {
     try {
       await auth.login({ email, password });
 
-      // Se il login ha successo, naviga alla homepage
-      navigate("/");
+      const currentUser = await api.getMe();
+      const isAdmin = currentUser.roles.some((r) => r.role === "ADMIN");
+
+      // Mostra il messaggio di successo
+      setSuccess("Login effettuato con successo! Reindirizzamento...");
+
+      // Aspetta 1.5 secondi prima di reindirizzare, così l'utente legge il messaggio
+      setTimeout(() => {
+        if (isAdmin) {
+          navigate("/admin");
+        } else {
+          navigate("/");
+        }
+      }, 1500);
     } catch (err) {
       setError("Credenziali non valide. Riprova.");
       console.error(err);
@@ -87,6 +102,12 @@ export default function LoginPage() {
           {error && (
             <div className="rounded-md bg-red-50 p-4">
               <p className="text-sm font-medium text-red-700">{error}</p>
+            </div>
+          )}
+
+          {success && (
+            <div className="rounded-md bg-green-50 p-4">
+              <p className="text-sm font-medium text-green-700">{success}</p>
             </div>
           )}
 
