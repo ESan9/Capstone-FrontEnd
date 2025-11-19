@@ -165,7 +165,7 @@ export default function Navbar() {
             // --- DROPDOWN UTENTE DESKTOP ---
             <Menu as="div" className="relative ml-3">
               <div>
-                <MenuButton className="flex items-center gap-x-2 rounded-full bg-white text-sm focus:outline-none p-1 pr-2 hover:bg-gray-50 border border-transparent hover:border-gray-200 transition-colors">
+                <MenuButton className="flex items-center gap-x-2 rounded-full bg-white text-sm focus:outline-none p-1 pr-2 hover:bg-gray-50 border border-transparent hover:border-gray-200 transition-colors cursor-pointer">
                   <span className="sr-only">Apri menu utente</span>
                   <UserCircleIcon
                     className="h-8 w-8 text-gray-900"
@@ -204,7 +204,7 @@ export default function Navbar() {
                   <MenuItem>
                     <button
                       onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-sm text-red-600 data-[focus]:bg-gray-100"
+                      className="block w-full text-left px-4 py-2 text-sm text-red-600 data-[focus]:bg-gray-100 cursor-pointer"
                     >
                       Logout
                     </button>

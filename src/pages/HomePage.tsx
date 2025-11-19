@@ -56,13 +56,9 @@ export default function HomePage() {
     <div className="bg-white">
       {/* ================= HERO SECTION ================= */}
       <div className="relative bg-gray-900 text-white">
-        {/* Immagine di sfondo con overlay */}
         <div className="absolute inset-0 overflow-hidden">
           <img
-            src={
-              heroProduct?.productImages?.[0]?.imageUrl ||
-              "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1200&auto=format&fit=crop"
-            }
+            src="src\assets\1000007128.jpg"
             alt="Hero Background"
             className="h-full w-full object-cover object-center opacity-50"
           />
@@ -71,20 +67,17 @@ export default function HomePage() {
 
         <div className="relative mx-auto max-w-7xl px-6 py-32 sm:py-48 lg:px-8 flex flex-col items-center text-center">
           <h1 className="text-4xl font-bold tracking-tight sm:text-6xl text-white drop-shadow-md">
-            {heroProduct ? heroProduct.name : "Nuova Collezione"}
+            SEGNALI
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-200 max-w-xl drop-shadow-sm">
-            {heroProduct
-              ? heroProduct.description.substring(0, 150) +
-                (heroProduct.description.length > 150 ? "..." : "")
-              : "Scopri i prodotti artigianali selezionati per te. Qualità e stile senza compromessi."}
+            Prodotti artigianali dal 1989. Qualità e stile senza compromessi.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
             <Link
-              to={heroProduct ? `/product/${heroProduct.slug}` : "/shop"}
+              to={"/shop"}
               className="rounded-md bg-white px-6 py-3 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-all"
             >
-              {heroProduct ? "Clicca per il dettaglio" : "Vai al Negozio"}
+              {heroProduct ? "Vai al catalogo" : "Vai al Negozio"}
             </Link>
             {!heroProduct && (
               <Link
