@@ -7,12 +7,13 @@ import {
   fetchCategoryBySlug,
 } from "../services/api";
 import ProductCard from "../components/ProductCard";
-// Aggiungi PlusIcon e MinusIcon per l'UX
 import {
   FunnelIcon,
   XMarkIcon,
   PlusIcon,
   MinusIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
 } from "@heroicons/react/20/solid";
 
 export default function ProductList() {
@@ -21,11 +22,12 @@ export default function ProductList() {
   // STATI DATI
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [totalPages, setTotalPages] = useState(0); // <--- NUOVO: Stato per pagine totali
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // STATO VISIBILITÀ FILTRI MOBILE
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false); // <--- NUOVO
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   // STATI FILTRI
   const [activeFilters, setActiveFilters] = useState<ProductFilterParams>({
@@ -34,6 +36,7 @@ export default function ProductList() {
     sort: "name,asc",
   });
 
+  // Filtri temporanei (form)
   const [tempFilters, setTempFilters] = useState<ProductFilterParams>({
     page: 0,
     size: 9,
@@ -44,10 +47,12 @@ export default function ProductList() {
     categoryId: "",
   });
 
+  // 1. Carica Categorie all'avvio
   useEffect(() => {
     fetchCategories().then((res) => setCategories(res.content));
   }, []);
 
+  // 2. Inizializza filtri se c'è uno slug nell'URL
   useEffect(() => {
     const initFilters = async () => {
       if (slug) {
@@ -68,11 +73,14 @@ export default function ProductList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug]);
 
+  // 3. Carica Prodotti quando cambiano i filtri attivi
   useEffect(() => {
     const loadProducts = async () => {
       try {
         setLoading(true);
         setError(null);
+
+        // Pulizia filtri vuoti
         const cleanFilters = Object.fromEntries(
           Object.entries(activeFilters).filter(
             ([, v]) => v !== "" && v !== undefined && v !== null
@@ -80,7 +88,9 @@ export default function ProductList() {
         );
 
         const response = await fetchProducts(cleanFilters);
+
         setProducts(response.content);
+        setTotalPages(response.totalPages); // <--- NUOVO: Salviamo il numero totale di pagine
       } catch (err) {
         setError("Impossibile caricare i prodotti.");
         console.error(err);
@@ -104,9 +114,9 @@ export default function ProductList() {
   const applyFilters = () => {
     setActiveFilters({
       ...tempFilters,
-      page: 0,
+      page: 0, // Quando filtro, riparto sempre da pagina 0
     });
-    setMobileFiltersOpen(false); // Chiudi i filtri su mobile dopo aver applicato
+    setMobileFiltersOpen(false);
   };
 
   const resetFilters = () => {
@@ -124,6 +134,18 @@ export default function ProductList() {
     setMobileFiltersOpen(false);
   };
 
+  // NUOVO: Gestione cambio pagina
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 0 && newPage < totalPages) {
+      setActiveFilters((prev) => ({
+        ...prev,
+        page: newPage,
+      }));
+      // Scroll fluido verso l'alto quando si cambia pagina
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
@@ -134,7 +156,7 @@ export default function ProductList() {
           </h1>
 
           <div className="flex items-center justify-between w-full sm:w-auto">
-            {/* BOTTONE FILTRI MOBILE (Visibile solo < lg) */}
+            {/* BOTTONE FILTRI MOBILE (< lg) */}
             <button
               type="button"
               className="flex items-center gap-2 text-gray-700 font-medium lg:hidden"
@@ -165,6 +187,7 @@ export default function ProductList() {
                   setActiveFilters((prev) => ({
                     ...prev,
                     sort: e.target.value,
+                    page: 0, // Reset pagina se cambio ordinamento
                   }));
                 }}
                 className="border-none text-sm font-medium text-gray-700 focus:ring-0 cursor-pointer bg-transparent"
@@ -180,12 +203,6 @@ export default function ProductList() {
 
         <div className="pt-6 grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-10">
           {/* --- SIDEBAR FILTRI --- */}
-          {/* Logica CSS:
-              - lg:block -> Sempre visibile su desktop
-              - Su mobile dipende dallo stato 'mobileFiltersOpen':
-                se true -> block (visibile)
-                se false -> hidden (nascosto)
-          */}
           <form
             className={`${
               mobileFiltersOpen ? "block" : "hidden"
@@ -274,7 +291,7 @@ export default function ProductList() {
             </div>
           </form>
 
-          {/* --- GRIGLIA PRODOTTI --- */}
+          {/* --- GRIGLIA PRODOTTI & PAGINAZIONE --- */}
           <div className="lg:col-span-3">
             {loading ? (
               <div className="flex h-64 items-center justify-center">
@@ -287,11 +304,61 @@ export default function ProductList() {
                 Nessun prodotto corrisponde ai filtri selezionati.
               </div>
             ) : (
-              <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-                {products.map((product) => (
-                  <ProductCard key={product.idProduct} product={product} />
-                ))}
-              </div>
+              <>
+                {/* Griglia */}
+                <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+                  {products.map((product) => (
+                    <ProductCard key={product.idProduct} product={product} />
+                  ))}
+                </div>
+
+                {/* --- PAGINAZIONE (Nuova Sezione) --- */}
+                {totalPages > 1 && (
+                  <div className="mt-12 flex items-center justify-center border-t border-gray-200 pt-8">
+                    <div className="flex items-center gap-2">
+                      {/* Bottone Precedente */}
+                      <button
+                        // FIX: Aggiunto ( ?? 0) per gestire l'undefined
+                        onClick={() =>
+                          handlePageChange((activeFilters.page ?? 0) - 1)
+                        }
+                        disabled={(activeFilters.page ?? 0) === 0}
+                        className={`flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ${
+                          (activeFilters.page ?? 0) === 0
+                            ? "cursor-not-allowed bg-gray-50 text-gray-400 ring-gray-200"
+                            : "bg-white text-gray-900 ring-gray-300 hover:bg-gray-50"
+                        }`}
+                      >
+                        <ChevronLeftIcon className="mr-1 h-4 w-4" />
+                        Indietro
+                      </button>
+
+                      {/* Indicatore Pagine */}
+                      <span className="px-4 text-sm font-medium text-gray-700">
+                        {/* FIX: Aggiunto ( ?? 0) */}
+                        Pagina {(activeFilters.page ?? 0) + 1} di {totalPages}
+                      </span>
+
+                      {/* Bottone Successivo */}
+                      <button
+                        // FIX: Aggiunto ( ?? 0)
+                        onClick={() =>
+                          handlePageChange((activeFilters.page ?? 0) + 1)
+                        }
+                        disabled={(activeFilters.page ?? 0) >= totalPages - 1}
+                        className={`flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ${
+                          (activeFilters.page ?? 0) >= totalPages - 1
+                            ? "cursor-not-allowed bg-gray-50 text-gray-400 ring-gray-200"
+                            : "bg-white text-gray-900 ring-gray-300 hover:bg-gray-50"
+                        }`}
+                      >
+                        Avanti
+                        <ChevronRightIcon className="ml-1 h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

@@ -166,17 +166,16 @@ export const uploadProductImage = async (
   file: File
 ): Promise<ProductImage> => {
   const formData = new FormData();
-  formData.append("image", file);
+  formData.append("image", file); // Assicurati che "image" corrisponda al @RequestParam del backend
+
+  // Axios rileva FormData e imposta automaticamente il Content-Type corretto con il boundary
   const response = await apiClient.post(
     `/product/${productId}/upload-image`,
-    formData,
-    {
-      headers: { "Content-Type": "multipart/form-data" },
-    }
+    formData
   );
+
   return response.data;
 };
-
 // 5. Modifica Categoria
 export const updateCategory = async (
   id: string,
@@ -230,15 +229,29 @@ export const getErrorMessage = (error: unknown): string => {
   if (axios.isAxiosError(error) && error.response) {
     const data = error.response.data as BackendErrorResponse;
 
-    // 1. Caso del tuo validation custom (ErrorsWithListDTO)
-    if (data.errorsList && Array.isArray(data.errorsList)) {
-      return `${data.message}\n- ${data.errorsList.join("\n- ")}`;
+    // 1. PRIORITÀ ASSOLUTA: Se il backend ci ha mandato un messaggio esplicito, usiamo quello
+    if (data && data.message) {
+      return data.message;
     }
 
-    // 2. Fallback per messaggi di Spring o errori generici
-    return (
-      data.message || data.error || `Errore server: ${error.response.status}`
-    );
+    // 2. Caso Validation Custom (ErrorsWithListDTO) - se presente
+    if (data && data.errorsList && Array.isArray(data.errorsList)) {
+      return `${data.message || "Errore validazione"}\n- ${data.errorsList.join(
+        "\n- "
+      )}`;
+    }
+
+    // 3. Fallback specifici basati sullo status (se il backend NON ha mandato un JSON valido)
+    if (error.response.status === 413) {
+      return "L'immagine è troppo pesante! (Default Frontend)";
+    }
+
+    if (error.response.status === 403) {
+      return "Non hai i permessi per fare questa azione.";
+    }
+
+    // 4. Fallback generico finale
+    return data.error || `Errore server: ${error.response.status}`;
   }
 
   return "Si è verificato un errore imprevisto o di rete.";

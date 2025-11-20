@@ -233,24 +233,48 @@ export default function AdminPage() {
 
       let productId = editingProdId;
 
+      // 1. SALVATAGGIO PRODOTTO (Create o Update)
       if (editingProdId) {
-        // UPDATE
         await api.updateProduct(editingProdId, prodDTO);
         setMessage({ type: "success", text: "Prodotto aggiornato!" });
       } else {
-        // CREATE
         const newProd = await api.createProduct(prodDTO);
         productId = newProd.idProduct;
-        setMessage({ type: "success", text: "Prodotto creato!" });
+        // Non mettiamo ancora il messaggio di successo, aspettiamo l'immagine
       }
 
+      // 2. GESTIONE IMMAGINE (Isolata)
       if (prodFile && productId) {
-        await api.uploadProductImage(productId, prodFile);
+        try {
+          await api.uploadProductImage(productId, prodFile);
+        } catch (imgErr) {
+          // Se siamo qui, il prodotto è SALVATO, ma l'immagine NO.
+          console.error("Errore immagine", imgErr);
+
+          const imgErrorText = api.getErrorMessage(imgErr);
+          setMessage({
+            type: "error", // O "warning" se hai uno stile giallo
+            text: `Prodotto salvato, ma errore caricamento immagine: ${imgErrorText}`,
+          });
+
+          resetProdForm();
+          refreshProducts();
+          return;
+        }
       }
 
+      // 3. TUTTO OK
+      setMessage({
+        type: "success",
+        text:
+          productId === editingProdId
+            ? "Prodotto aggiornato con immagine!"
+            : "Prodotto creato con successo!",
+      });
       resetProdForm();
-      refreshProducts(); // Ricarica la pagina corrente
+      refreshProducts();
     } catch (err) {
+      // Questo catch scatta SOLO se fallisce la creazione/aggiornamento del prodotto stesso
       console.error(err);
       const errorText = api.getErrorMessage(err);
       setMessage({ type: "error", text: errorText });
