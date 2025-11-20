@@ -235,7 +235,7 @@ export const getErrorMessage = (error: unknown): string => {
       return `${data.message}\n- ${data.errorsList.join("\n- ")}`;
     }
 
-    // 2. Fallback per messaggi standard di Spring o errori generici
+    // 2. Fallback per messaggi di Spring o errori generici
     return (
       data.message || data.error || `Errore server: ${error.response.status}`
     );
