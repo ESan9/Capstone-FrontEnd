@@ -213,7 +213,7 @@ export default function Navbar() {
               </Transition>
             </Menu>
           ) : (
-            // --- LOGIN / REGISTER DESKTOP ---
+            // LOGIN / REGISTER DESKTOP
             <>
               <Link
                 to="/login"

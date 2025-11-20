@@ -6,9 +6,13 @@ import { CheckIcon, XMarkIcon } from "@heroicons/react/20/solid";
 
 export default function ProductDetailPage() {
   const { slug } = useParams<{ slug: string }>();
+
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Stato per gestire l'immagine attualmente visualizzata
+  const [activeImage, setActiveImage] = useState<string>("");
 
   useEffect(() => {
     if (!slug) return;
@@ -16,9 +20,15 @@ export default function ProductDetailPage() {
     const loadProduct = async () => {
       try {
         setLoading(true);
-        // Assicurati che fetchProductBySlug esista nel tuo api.ts
         const data = await api.fetchProductBySlug(slug);
         setProduct(data);
+
+        // Appena carichiamo il prodotto, impostiamo la prima immagine come attiva
+        if (data.productImages && data.productImages.length > 0) {
+          setActiveImage(data.productImages[0].imageUrl);
+        } else {
+          setActiveImage("https://placehold.co/600x600?text=No+Image");
+        }
       } catch {
         setError("Prodotto non trovato.");
       } finally {
@@ -36,21 +46,43 @@ export default function ProductDetailPage() {
       </div>
     );
 
-  const mainImage =
-    product.productImages?.[0]?.imageUrl ||
-    "https://placehold.co/600x600?text=No+Image";
-
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="lg:grid lg:grid-cols-2 lg:gap-x-8">
-          {/* --- COLONNA SINISTRA: IMMAGINE --- */}
-          <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg border border-gray-200">
-            <img
-              src={mainImage}
-              alt={product.name}
-              className="h-full w-full object-cover object-center"
-            />
+          {/* --- COLONNA SINISTRA: GALLERIA IMMAGINI --- */}
+          <div className="flex flex-col gap-4">
+            {/* Immagine Principale Grande */}
+            <div className="aspect-square w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
+              <img
+                src={activeImage}
+                alt={product.name}
+                className="h-full w-full object-cover object-center"
+              />
+            </div>
+
+            {/* Carosello Miniature (Thumbnails) */}
+            {product.productImages && product.productImages.length > 1 && (
+              <div className="grid grid-cols-4 gap-4">
+                {product.productImages.map((img) => (
+                  <button
+                    key={img.idProductImage}
+                    onClick={() => setActiveImage(img.imageUrl)}
+                    className={`relative aspect-square overflow-hidden rounded-md bg-gray-100 ${
+                      activeImage === img.imageUrl
+                        ? "ring-2 ring-black ring-offset-2" // Bordo se selezionata
+                        : "hover:opacity-75"
+                    }`}
+                  >
+                    <img
+                      src={img.imageUrl}
+                      alt="Dettaglio prodotto"
+                      className="h-full w-full object-cover object-center"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* --- COLONNA DESTRA: INFO --- */}
