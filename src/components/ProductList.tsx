@@ -325,7 +325,7 @@ export default function ProductList() {
                         className={`flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ${
                           (activeFilters.page ?? 0) === 0
                             ? "cursor-not-allowed bg-gray-50 text-gray-400 ring-gray-200"
-                            : "bg-white text-gray-900 ring-gray-300 hover:bg-gray-50"
+                            : "bg-white text-gray-900 ring-gray-300 hover:bg-gray-50 cursor-pointer"
                         }`}
                       >
                         <ChevronLeftIcon className="mr-1 h-4 w-4" />
@@ -348,7 +348,7 @@ export default function ProductList() {
                         className={`flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ${
                           (activeFilters.page ?? 0) >= totalPages - 1
                             ? "cursor-not-allowed bg-gray-50 text-gray-400 ring-gray-200"
-                            : "bg-white text-gray-900 ring-gray-300 hover:bg-gray-50"
+                            : "bg-white text-gray-900 ring-gray-300 hover:bg-gray-50 cursor-pointer"
                         }`}
                       >
                         Avanti
