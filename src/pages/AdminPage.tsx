@@ -33,7 +33,6 @@ export default function AdminPage() {
   // --- PAGINAZIONE PRODOTTI ---
   const [prodPage, setProdPage] = useState(0);
   const [prodTotalPages, setProdTotalPages] = useState(0);
-  // Questo stato viene usato nel footer della tabella prodotti
   const [prodTotalElements, setProdTotalElements] = useState(0);
   const PAGE_SIZE = 8;
 
@@ -334,10 +333,8 @@ export default function AdminPage() {
     if (!window.confirm("Vuoi davvero eliminare questa foto?")) return;
 
     try {
-      // 1. Chiama il backend
       await api.deleteProductImage(imageId);
 
-      // 2. Aggiorna l'interfaccia rimuovendo l'immagine dalla lista locale
       setProdExistingImages((prev) =>
         prev.filter((img) => img.idProductImage !== imageId)
       );
@@ -497,7 +494,7 @@ export default function AdminPage() {
             </form>
           </div>
 
-          {/* TABELLA */}
+          {/* TABELLA CATEGORIE */}
           <div className="lg:col-span-2">
             <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
               <table className="min-w-full divide-y divide-gray-300">
@@ -531,13 +528,13 @@ export default function AdminPage() {
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                         <button
                           onClick={() => startEditCategory(cat)}
-                          className="text-black hover:underline mr-4"
+                          className="text-black hover:underline mr-4 cursor-pointer"
                         >
                           Modifica
                         </button>
                         <button
                           onClick={() => handleDeleteCategory(cat.idCategory)}
-                          className="text-red-600 hover:text-red-900"
+                          className="text-red-600 hover:text-red-900 cursor-pointer"
                         >
                           Elimina
                         </button>
@@ -604,7 +601,7 @@ export default function AdminPage() {
                   required
                   value={prodCategory}
                   onChange={(e) => setProdCategory(e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2 bg-white"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2 bg-white cursor-pointer"
                 >
                   <option value="">Seleziona...</option>
                   {categoriesList.map((cat) => (
@@ -626,7 +623,7 @@ export default function AdminPage() {
                       e.target.value as "AVAILABLE" | "UNAVAILABLE"
                     )
                   }
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2 bg-white"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2 bg-white cursor-pointer"
                 >
                   <option value="AVAILABLE">Disponibile</option>
                   <option value="UNAVAILABLE">Non Disponibile</option>
@@ -662,7 +659,7 @@ export default function AdminPage() {
                   type="checkbox"
                   checked={prodHighlighted}
                   onChange={(e) => setProdHighlighted(e.target.checked)}
-                  className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
+                  className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black cursor-pointer"
                 />
                 <label
                   htmlFor="highlighted"
@@ -709,13 +706,12 @@ export default function AdminPage() {
                           />
 
                           {/* BOTTONE ELIMINA (X) */}
-                          {/* Appare solo quando passi il mouse sopra l'immagine (grazie a group-hover) */}
                           <button
                             type="button"
                             onClick={() =>
                               handleDeleteImage(img.idProductImage)
                             }
-                            className="absolute top-1 right-1 rounded-full bg-red-600 p-1 text-white shadow-sm opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700 focus:outline-none"
+                            className="absolute top-1 right-1 rounded-full bg-red-600 p-1 text-white shadow-sm opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700 focus:outline-none cursor-pointer"
                             title="Elimina foto"
                           >
                             <XMarkIcon className="h-4 w-4" />
@@ -770,7 +766,7 @@ export default function AdminPage() {
             <div className="flex gap-3 pt-6 mt-6 border-t border-gray-100">
               <button
                 type="submit"
-                className="inline-flex justify-center rounded-md bg-black py-2 px-6 text-sm font-medium text-white shadow-sm hover:bg-gray-800"
+                className="inline-flex justify-center rounded-md bg-black py-2 px-6 text-sm font-medium text-white shadow-sm hover:bg-gray-800 cursor-pointer"
               >
                 {editingProdId ? "Salva Modifiche" : "Crea Prodotto"}
               </button>
@@ -778,7 +774,7 @@ export default function AdminPage() {
                 <button
                   type="button"
                   onClick={resetProdForm}
-                  className="inline-flex justify-center rounded-md border border-gray-300 bg-white py-2 px-6 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+                  className="inline-flex justify-center rounded-md border border-gray-300 bg-white py-2 px-6 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 cursor-pointer"
                 >
                   Annulla
                 </button>
@@ -863,13 +859,13 @@ export default function AdminPage() {
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                         <button
                           onClick={() => startEditProduct(prod)}
-                          className="text-black hover:underline mr-4"
+                          className="text-black hover:underline mr-4 cursor-pointer"
                         >
                           Modifica
                         </button>
                         <button
                           onClick={() => handleDeleteProduct(prod.idProduct)}
-                          className="text-red-600 hover:text-red-900"
+                          className="text-red-600 hover:text-red-900 cursor-pointer"
                         >
                           Elimina
                         </button>
@@ -913,7 +909,7 @@ export default function AdminPage() {
                     <button
                       onClick={handlePrevPage}
                       disabled={prodPage === 0}
-                      className={`relative inline-flex items-center rounded-l-md border px-2 py-2 text-sm font-medium ${
+                      className={`relative inline-flex items-center rounded-l-md border px-2 py-2 text-sm font-medium cursor-pointer ${
                         prodPage === 0
                           ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                           : "bg-white text-gray-500 hover:bg-gray-50 border-gray-300"
@@ -924,7 +920,7 @@ export default function AdminPage() {
                     <button
                       onClick={handleNextPage}
                       disabled={prodPage >= prodTotalPages - 1}
-                      className={`relative inline-flex items-center rounded-r-md border px-2 py-2 text-sm font-medium ${
+                      className={`relative inline-flex items-center rounded-r-md border px-2 py-2 text-sm font-medium cursor-pointer ${
                         prodPage >= prodTotalPages - 1
                           ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                           : "bg-white text-gray-500 hover:bg-gray-50 border-gray-300"
