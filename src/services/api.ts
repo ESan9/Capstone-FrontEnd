@@ -266,3 +266,12 @@ export const fetchCategoryBySlug = async (slug: string): Promise<Category> => {
     throw error;
   }
 };
+
+export const deleteProductImage = async (imageId: string): Promise<void> => {
+  try {
+    await apiClient.delete(`/product-images/${imageId}`);
+  } catch (error) {
+    console.error("Errore eliminazione immagine:", error);
+    throw error;
+  }
+};
