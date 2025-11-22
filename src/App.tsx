@@ -12,6 +12,7 @@ import ProductDetailPage from "./pages/ProductDetailPage";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import CategoryListPage from "./pages/CategoryListPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   return (
@@ -40,6 +41,9 @@ function App() {
 
             {/* ADMIN */}
             <Route path="/admin" element={<AdminPage />} />
+
+            {/* NOT FOUND */}
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>
 

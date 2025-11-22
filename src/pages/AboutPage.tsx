@@ -14,8 +14,8 @@ export default function AboutPage() {
               <p>
                 Segnali nasce dall'idea di unire la tradizione artigianale
                 italiana con un design moderno e funzionale. Ogni prodotto che
-                trovi nel nostro catalogo è stato selezionato o creato con la
-                massima cura per i dettagli.
+                trovi nel nostro catalogo è stato creato con la massima cura per
+                i dettagli.
               </p>
               <p className="mt-8">
                 Non siamo solo un negozio, ma un punto di incontro per chi cerca
