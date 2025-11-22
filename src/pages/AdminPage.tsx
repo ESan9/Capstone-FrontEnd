@@ -167,21 +167,41 @@ export default function AdminPage() {
       };
       let categoryId = editingCatId;
 
+      // 1. Creazione o Aggiornamento Dati Categoria
       if (editingCatId) {
         await api.updateCategory(editingCatId, catDTO);
-        setMessage({ type: "success", text: "Categoria aggiornata!" });
       } else {
         const newCat = await api.createCategory(catDTO);
         categoryId = newCat.idCategory;
-        setMessage({ type: "success", text: "Categoria creata!" });
       }
 
+      // 2. Gestione Upload Immagine (Nested Try/Catch come nei prodotti)
       if (catFile && categoryId) {
-        await api.uploadCategoryCover(categoryId, catFile);
+        try {
+          await api.uploadCategoryCover(categoryId, catFile);
+        } catch (imgErr) {
+          console.error("Errore upload cover", imgErr);
+          const imgErrorText = api.getErrorMessage(imgErr);
+          setMessage({
+            type: "error",
+            text: `Categoria salvata, ma errore nel caricamento dell'immagine: ${imgErrorText}`,
+          });
+          resetCatForm();
+          refreshCategories();
+          return;
+        }
       }
+
+      // 3. Successo Completo
+      setMessage({
+        type: "success",
+        text: editingCatId ? "Categoria aggiornata!" : "Categoria creata!",
+      });
+
       resetCatForm();
       refreshCategories();
     } catch (err) {
+      // 4. Errore nel salvataggio dei dati principali della categoria
       console.error(err);
       const errorText = api.getErrorMessage(err);
       setMessage({ type: "error", text: errorText });
@@ -281,7 +301,7 @@ export default function AdminPage() {
           const imgErrorText = api.getErrorMessage(imgErr);
           setMessage({
             type: "error",
-            text: `Prodotto salvato, ma errore immagini: ${imgErrorText}`,
+            text: `Prodotto salvato, ma errore nel caricamento delle immagini: ${imgErrorText}`,
           });
           resetProdForm();
           refreshProducts();
