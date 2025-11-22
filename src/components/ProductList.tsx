@@ -90,7 +90,7 @@ export default function ProductList() {
         const response = await fetchProducts(cleanFilters);
 
         setProducts(response.content);
-        setTotalPages(response.totalPages); // <--- NUOVO: Salviamo il numero totale di pagine
+        setTotalPages(response.totalPages); // Salviamo il numero totale di pagine
       } catch (err) {
         setError("Impossibile caricare i prodotti.");
         console.error(err);
@@ -134,7 +134,7 @@ export default function ProductList() {
     setMobileFiltersOpen(false);
   };
 
-  // NUOVO: Gestione cambio pagina
+  // Gestione cambio pagina
   const handlePageChange = (newPage: number) => {
     if (newPage >= 0 && newPage < totalPages) {
       setActiveFilters((prev) => ({
@@ -312,7 +312,7 @@ export default function ProductList() {
                   ))}
                 </div>
 
-                {/* --- PAGINAZIONE (Nuova Sezione) --- */}
+                {/* PAGINAZIONE */}
                 {totalPages > 1 && (
                   <div className="mt-12 flex items-center justify-center border-t border-gray-200 pt-8">
                     <div className="flex items-center gap-2">

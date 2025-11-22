@@ -15,7 +15,7 @@ export default function HomePage() {
       try {
         setIsLoading(true);
 
-        // 1. Cerchiamo un prodotto "In Evidenza" per la Hero Section
+        // 1. Prodotto "In Evidenza" per la Hero Section
         const highlightedRes = await api.fetchProducts({
           highlighted: true,
           size: 1,
@@ -158,7 +158,7 @@ export default function HomePage() {
             </Link>
           </div>
 
-          {/* Qui usiamo il tuo ProductCard */}
+          {/* ProductCard */}
           <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
             {latestProducts.map((product) => (
               <ProductCard key={product.idProduct} product={product} />

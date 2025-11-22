@@ -1,11 +1,7 @@
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 
-/**
- * Questo è il nostro Hook personalizzato.
- * Lo teniamo in un file separato per non violare
- * la regola "only-export-components" di Vite Fast Refresh.
- */
+//  Hook personalizzato.
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

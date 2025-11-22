@@ -10,6 +10,5 @@ export interface AuthContextType {
   logout: () => void;
 }
 
-// Creiamo ed esportiamo il Contesto
 // @ts-expect-error Inizializziamo con 'undefined' (gestito dall'hook useAuth)
 export const AuthContext = createContext<AuthContextType>(undefined);
