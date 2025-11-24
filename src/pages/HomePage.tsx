@@ -58,7 +58,7 @@ export default function HomePage() {
       <div className="relative bg-gray-900 text-white">
         <div className="absolute inset-0 overflow-hidden">
           <img
-            src="https://res.cloudinary.com/dj6mpvxdf/image/upload/v1763570158/ff2i9lk912e79y5rthtv.jpg"
+            src="https://res.cloudinary.com/dj6mpvxdf/image/upload/v1764003219/1000007128_copy_tyfq6p.jpg"
             alt="Hero Background"
             className="h-full w-full object-cover object-center opacity-50"
           />
