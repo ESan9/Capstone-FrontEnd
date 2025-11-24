@@ -35,7 +35,7 @@ export default function AboutPage() {
           {/* Immagine Decorativa */}
           <div className="mt-16 aspect-[16/9] w-full overflow-hidden rounded-xl bg-gray-100 shadow-lg">
             <img
-              src="src\assets\1000007128.jpg"
+              src="https://res.cloudinary.com/dj6mpvxdf/image/upload/v1763570158/ff2i9lk912e79y5rthtv.jpg"
               alt="Il nostro laboratorio"
               className="h-full w-full object-cover"
             />
