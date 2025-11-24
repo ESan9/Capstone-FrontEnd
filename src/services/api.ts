@@ -14,9 +14,11 @@ import type {
   BackendErrorResponse,
 } from "../types/api";
 
+const baseURL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+
 // Creo un "client" axios pre-configurato
 const apiClient = axios.create({
-  baseURL: "http://localhost:3001",
+  baseURL: baseURL,
   timeout: 10000,
 });
 
