@@ -1,8 +1,4 @@
-import {
-  EnvelopeIcon,
-  PhoneIcon,
-  MapPinIcon,
-} from "@heroicons/react/24/outline";
+import { PhoneIcon, MapPinIcon } from "@heroicons/react/24/outline";
 
 export default function ContactPage() {
   const CONTACT_EMAIL = "sannagianmario894@gmail.com";
@@ -59,7 +55,7 @@ export default function ContactPage() {
               <div className="flex gap-x-2 items-center mb-4">
                 <a
                   href={`mailto:${CONTACT_EMAIL}?subject=Informazioni%20Segnali&body=Salve,%20vorrei%20informazioni%20riguardo...`}
-                  className="rounded-md bg-black px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                  className="rounded-md bg-black px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
                 >
                   Invia una Email
                 </a>
