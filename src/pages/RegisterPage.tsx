@@ -25,7 +25,6 @@ export default function RegisterPage() {
     }
 
     try {
-      // Oggetto DTO con i tipi
       const registerData: RegisterDTO = { name, surname, email, password };
 
       await api.register(registerData);
@@ -154,7 +153,7 @@ export default function RegisterPage() {
           <div>
             <button
               type="submit"
-              className="flex w-full justify-center rounded-md bg-black px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500 cursor-pointer"
+              className="flex w-full justify-center rounded-md bg-black px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500 cursor-pointer"
             >
               Registrati
             </button>

@@ -105,7 +105,7 @@ export default function Navbar() {
 
             <PopoverPanel
               transition
-              className="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[enter]:ease-out data-[leave]:duration-150 data-[leave]:ease-in"
+              className="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5 transition data-closed:translate-y-1 data-closed:opacity-0 data-enter:duration-200 data-enter:ease-out data-leave:duration-150 data-leave:ease-in"
             >
               <div className="p-4">
                 {loadingCategories && (
@@ -195,7 +195,7 @@ export default function Navbar() {
                     <MenuItem>
                       <Link
                         to="/admin"
-                        className="block px-4 py-2 text-sm font-semibold text-gray-900 border-b border-gray-100 data-[focus]:bg-gray-100"
+                        className="block px-4 py-2 text-sm font-semibold text-gray-900 border-b border-gray-100 data-focus:bg-gray-100"
                       >
                         Dashboard Admin
                       </Link>
@@ -204,7 +204,7 @@ export default function Navbar() {
                   <MenuItem>
                     <button
                       onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-sm text-red-600 data-[focus]:bg-gray-100 cursor-pointer"
+                      className="block w-full text-left px-4 py-2 text-sm text-red-600 data-focus:bg-gray-100 cursor-pointer"
                     >
                       Logout
                     </button>
@@ -262,7 +262,7 @@ export default function Navbar() {
                     Categorie
                     <ChevronDownIcon
                       aria-hidden="true"
-                      className="h-5 w-5 flex-none group-data-[open]:rotate-180"
+                      className="h-5 w-5 flex-none group-data-open:rotate-180"
                     />
                   </DisclosureButton>
                   <DisclosurePanel className="mt-2 space-y-2">

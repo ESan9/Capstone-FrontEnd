@@ -1,7 +1,6 @@
 import { createContext } from "react";
 import type { User, LoginDTO } from "../types/api";
 
-// Definiamo la "forma" del nostro contesto
 export interface AuthContextType {
   user: User | null;
   token: string | null;
@@ -10,5 +9,5 @@ export interface AuthContextType {
   logout: () => void;
 }
 
-// @ts-expect-error Inizializziamo con 'undefined' (gestito dall'hook useAuth)
+// @ts-expect-error Inizializzo con 'undefined' per hook useAuth
 export const AuthContext = createContext<AuthContextType>(undefined);

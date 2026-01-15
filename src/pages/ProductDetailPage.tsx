@@ -10,8 +10,6 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // Stato per gestire l'immagine attualmente visualizzata
   const [activeImage, setActiveImage] = useState<string>("");
 
   useEffect(() => {
@@ -23,7 +21,6 @@ export default function ProductDetailPage() {
         const data = await api.fetchProductBySlug(slug);
         setProduct(data);
 
-        // Appena carichiamo il prodotto, impostiamo la prima immagine come attiva
         if (data.productImages && data.productImages.length > 0) {
           setActiveImage(data.productImages[0].imageUrl);
         } else {
@@ -50,9 +47,8 @@ export default function ProductDetailPage() {
     <div className="bg-white">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="lg:grid lg:grid-cols-2 lg:gap-x-8">
-          {/* --- COLONNA SINISTRA: GALLERIA IMMAGINI --- */}
+          {/* Sinistra galleria */}
           <div className="flex flex-col gap-4">
-            {/* Immagine Principale Grande */}
             <div className="aspect-square w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
               <img
                 src={activeImage}
@@ -70,7 +66,7 @@ export default function ProductDetailPage() {
                     onClick={() => setActiveImage(img.imageUrl)}
                     className={`relative aspect-square overflow-hidden rounded-md bg-gray-100 ${
                       activeImage === img.imageUrl
-                        ? "ring-2 ring-black ring-offset-2" // Bordo se selezionata
+                        ? "ring-2 ring-black ring-offset-2"
                         : "hover:opacity-75"
                     }`}
                   >
@@ -85,7 +81,7 @@ export default function ProductDetailPage() {
             )}
           </div>
 
-          {/* --- COLONNA DESTRA: INFO --- */}
+          {/* Destra info */}
           <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
             <h1 className="text-3xl font-bold tracking-tight text-gray-900">
               {product.name}
@@ -103,7 +99,7 @@ export default function ProductDetailPage() {
               {product.availability === "AVAILABLE" ? (
                 <>
                   <CheckIcon
-                    className="h-5 w-5 flex-shrink-0 text-green-500"
+                    className="h-5 w-5 shrink-0 text-green-500"
                     aria-hidden="true"
                   />
                   <p className="ml-2 text-sm text-gray-500">
@@ -113,7 +109,7 @@ export default function ProductDetailPage() {
               ) : (
                 <>
                   <XMarkIcon
-                    className="h-5 w-5 flex-shrink-0 text-red-500"
+                    className="h-5 w-5 shrink-0 text-red-500"
                     aria-hidden="true"
                   />
                   <p className="ml-2 text-sm text-gray-500">Non disponibile</p>

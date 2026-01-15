@@ -17,7 +17,7 @@ export default function ContactPage() {
         </div>
 
         <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-8 text-base leading-7 sm:grid-cols-2 sm:gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-          {/* BOX 1: INDIRIZZO */}
+          {/* Indirizzo */}
           <div>
             <h3 className="border-l-4 border-black pl-6 font-semibold text-gray-900">
               Dove siamo
@@ -33,7 +33,7 @@ export default function ContactPage() {
             </address>
           </div>
 
-          {/* BOX 2: TELEFONO (Opzionale) */}
+          {/* Telefono */}
           <div>
             <h3 className="border-l-4 border-black pl-6 font-semibold text-gray-900">
               Telefono
@@ -46,7 +46,7 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* BOX 3: EMAIL */}
+          {/* Email */}
           <div>
             <h3 className="border-l-4 border-black pl-6 font-semibold text-gray-900">
               Scrivici
@@ -55,7 +55,7 @@ export default function ContactPage() {
               <div className="flex gap-x-2 items-center mb-4">
                 <a
                   href={`mailto:${CONTACT_EMAIL}?subject=Informazioni%20Segnali&body=Salve,%20vorrei%20informazioni%20riguardo...`}
-                  className="rounded-md bg-black px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                  className="rounded-md bg-black px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
                 >
                   Invia una Email
                 </a>

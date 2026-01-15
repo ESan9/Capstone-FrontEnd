@@ -14,7 +14,6 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  // Prende la prima immagine (o un placeholder)
   const primaryImage =
     product.productImages && product.productImages.length > 0
       ? product.productImages[0].imageUrl

@@ -192,7 +192,6 @@ export default function AdminPage() {
         }
       }
 
-      // 3. Successo Completo
       setMessage({
         type: "success",
         text: editingCatId ? "Categoria aggiornata!" : "Categoria creata!",
@@ -201,7 +200,6 @@ export default function AdminPage() {
       resetCatForm();
       refreshCategories();
     } catch (err) {
-      // 4. Errore nel salvataggio dei dati principali della categoria
       console.error(err);
       const errorText = api.getErrorMessage(err);
       setMessage({ type: "error", text: errorText });
@@ -516,7 +514,7 @@ export default function AdminPage() {
                       name="cat-file-upload"
                       type="file"
                       accept="image/*"
-                      className="sr-only" // nasconde l'input visivamente ma lo lascia accessibile
+                      className="sr-only"
                       onChange={(e) =>
                         setCatFile(e.target.files ? e.target.files[0] : null)
                       }

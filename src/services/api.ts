@@ -41,8 +41,6 @@ apiClient.interceptors.response.use(
     return response;
   },
   (error) => {
-    // Qui intercetto l'errore dal backend
-
     // 1. Gestione Token Scaduto o Non Valido (401)
     if (error.response && error.response.status === 401) {
       console.warn("Sessione scaduta o non autorizzata. Logout...");
@@ -129,7 +127,7 @@ export const getMe = async (): Promise<User> => {
   }
 };
 
-// FUNZIONI ADMIN (Scrittura)
+// FUNZIONI ADMIN
 
 // 1. Crea Categoria
 export const createCategory = async (
@@ -170,7 +168,6 @@ export const uploadProductImage = async (
   const formData = new FormData();
   formData.append("image", file);
 
-  // Axios rileva FormData e imposta automaticamente il Content-Type corretto con il boundary
   const response = await apiClient.post(
     `/product/${productId}/upload-image`,
     formData
@@ -206,7 +203,7 @@ export const updateProduct = async (
   }
 };
 
-// 7. Elimina Prodotto (Utile per gestire il catalogo)
+// 7. Elimina Prodotto
 export const deleteProduct = async (id: string): Promise<void> => {
   try {
     await apiClient.delete(`/product/${id}`);
@@ -227,11 +224,10 @@ export const deleteCategory = async (id: string): Promise<void> => {
 };
 
 export const getErrorMessage = (error: unknown): string => {
-  // Verifica se è un errore di Axios
   if (axios.isAxiosError(error) && error.response) {
     const data = error.response.data as BackendErrorResponse;
 
-    // 1. PRIORITÀ ASSOLUTA: Se il backend manda un messaggio esplicito, uso quello
+    // 1. Se il backend manda un messaggio esplicito, uso quello
     if (data && data.message) {
       return data.message;
     }

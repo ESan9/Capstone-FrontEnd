@@ -80,7 +80,6 @@ export default function ProductList() {
         setLoading(true);
         setError(null);
 
-        // Pulizia filtri vuoti
         const cleanFilters = Object.fromEntries(
           Object.entries(activeFilters).filter(
             ([, v]) => v !== "" && v !== undefined && v !== null
@@ -90,7 +89,7 @@ export default function ProductList() {
         const response = await fetchProducts(cleanFilters);
 
         setProducts(response.content);
-        setTotalPages(response.totalPages); // Salviamo il numero totale di pagine
+        setTotalPages(response.totalPages);
       } catch (err) {
         setError("Impossibile caricare i prodotti.");
         console.error(err);
@@ -114,7 +113,7 @@ export default function ProductList() {
   const applyFilters = () => {
     setActiveFilters({
       ...tempFilters,
-      page: 0, // Quando filtro, riparto sempre da pagina 0
+      page: 0,
     });
     setMobileFiltersOpen(false);
   };
@@ -141,7 +140,6 @@ export default function ProductList() {
         ...prev,
         page: newPage,
       }));
-      // Scroll fluido verso l'alto quando si cambia pagina
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
@@ -187,7 +185,7 @@ export default function ProductList() {
                   setActiveFilters((prev) => ({
                     ...prev,
                     sort: e.target.value,
-                    page: 0, // Reset pagina se cambio ordinamento
+                    page: 0,
                   }));
                 }}
                 className="border-none text-sm font-medium text-gray-700 focus:ring-0 cursor-pointer bg-transparent"
@@ -291,7 +289,7 @@ export default function ProductList() {
             </div>
           </form>
 
-          {/* --- GRIGLIA PRODOTTI & PAGINAZIONE --- */}
+          {/* --- GRIGLIA PRODOTTI e PAGINAZIONE --- */}
           <div className="lg:col-span-3">
             {loading ? (
               <div className="flex h-64 items-center justify-center">
@@ -334,13 +332,11 @@ export default function ProductList() {
 
                       {/* Indicatore Pagine */}
                       <span className="px-4 text-sm font-medium text-gray-700">
-                        {/* Aggiunto ( ?? 0) */}
                         Pagina {(activeFilters.page ?? 0) + 1} di {totalPages}
                       </span>
 
                       {/* Bottone Successivo */}
                       <button
-                        // Aggiunto ( ?? 0)
                         onClick={() =>
                           handlePageChange((activeFilters.page ?? 0) + 1)
                         }

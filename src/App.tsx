@@ -20,29 +20,23 @@ function App() {
       <div className="flex flex-col min-h-screen bg-gray-50">
         <Navbar />
 
-        <main className="flex-grow">
+        <main className="grow">
           <Routes>
-            {/* HOME & CATALOGO */}
             <Route path="/" element={<HomePage />} />
             <Route path="/shop" element={<ProductList />} />
             <Route path="/category/:slug" element={<ProductList />} />
             <Route path="/categories" element={<CategoryListPage />} />
 
-            {/* DETTAGLIO PRODOTTO */}
             <Route path="/product/:slug" element={<ProductDetailPage />} />
 
-            {/* INFO */}
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
 
-            {/* AUTH */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
 
-            {/* ADMIN */}
             <Route path="/admin" element={<AdminPage />} />
 
-            {/* NOT FOUND */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>

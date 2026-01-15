@@ -33,7 +33,7 @@ export default function AboutPage() {
           </div>
 
           {/* Immagine Decorativa */}
-          <div className="mt-16 aspect-[16/9] w-full overflow-hidden rounded-xl bg-gray-100 shadow-lg">
+          <div className="mt-16 aspect-video w-full overflow-hidden rounded-xl bg-gray-100 shadow-lg">
             <img
               src="https://res.cloudinary.com/dj6mpvxdf/image/upload/v1764003219/1000007128_copy_tyfq6p.jpg"
               alt="Il nostro laboratorio"

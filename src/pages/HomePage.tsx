@@ -15,7 +15,7 @@ export default function HomePage() {
       try {
         setIsLoading(true);
 
-        // 1. Prodotto "In Evidenza" per la Hero Section
+        // 1. Prodotto "In Evidenza" per la hero
         const highlightedRes = await api.fetchProducts({
           highlighted: true,
           size: 1,

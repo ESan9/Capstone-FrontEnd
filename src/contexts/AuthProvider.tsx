@@ -20,7 +20,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const loadUserFromToken = async () => {
       if (token) {
         try {
-          // L'interceptor in api.ts attaccherà il 'token' a questa richiesta
           const userData = await api.getMe();
           setUser(userData);
         } catch (error) {
@@ -33,18 +32,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setIsLoading(false);
     };
     loadUserFromToken();
-  }, [token]); // Dipende dal token
+  }, [token]);
 
-  // Funzione di Login
+  // Login
   const login = async (credentials: LoginDTO) => {
     try {
-      // 1. API di login
       const response = await api.login(credentials);
 
-      // 2. Salvo il token nel localStorage PRIMA
       localStorage.setItem("authToken", response.accessToken);
 
-      // 3. AGGIORNO LO STATO DEL TOKEN.
       setToken(response.accessToken);
     } catch (error) {
       console.error("AuthContext login: Fallimento login nel contesto:", error);
@@ -52,7 +48,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  // Funzione di Logout
+  // Logout
   const logout = () => {
     console.log("AuthContext logout: Eseguo logout.");
     setUser(null);

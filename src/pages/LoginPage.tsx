@@ -27,8 +27,6 @@ export default function LoginPage() {
 
       const currentUser = await api.getMe();
       const isAdmin = currentUser.roles.some((r) => r.role === "ADMIN");
-
-      // Mostra il messaggio di successo
       setSuccess("Login effettuato con successo! Reindirizzamento...");
       setTimeout(() => {
         if (isAdmin) {
@@ -112,7 +110,7 @@ export default function LoginPage() {
           <div>
             <button
               type="submit"
-              className="flex w-full justify-center rounded-md bg-black px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500 cursor-pointer"
+              className="flex w-full justify-center rounded-md bg-black px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500 cursor-pointer"
             >
               Accedi
             </button>
